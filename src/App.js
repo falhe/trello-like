@@ -36,29 +36,47 @@ const App = () => {
 
     // move in the same column
     if (columnSource === columnDestination) {
-      const newTaskIds = Array.from(columnSource.taskIds)
-      newTaskIds.splice(source.index, 1)
-      newTaskIds.splice(destination.index, 0, draggableId)
-
-      const newColumn = {
-        ...columnSource,
-        taskIds: newTaskIds,
-      }
-
-      const newState = {
-        ...initialData,
-        columns: {
-          ...initialData.columns,
-          [newColumn.id]: newColumn,
-        },
-      }
-
-      setInitialData(newState)
+      handleSameColumn(columnSource, source, destination, draggableId)
       return
     }
 
     // move in different column
     // new state for the source column
+    handleDifferentColumn(
+      columnSource,
+      columnDestination,
+      source,
+      destination,
+      draggableId
+    )
+  }
+
+  const handleSameColumn = (columnSource, source, destination, draggableId) => {
+    const newTaskIds = Array.from(columnSource.taskIds)
+    newTaskIds.splice(source.index, 1)
+    newTaskIds.splice(destination.index, 0, draggableId)
+
+    const newColumn = {
+      ...columnSource,
+      taskIds: newTaskIds,
+    }
+
+    setInitialData({
+      ...initialData,
+      columns: {
+        ...initialData.columns,
+        [newColumn.id]: newColumn,
+      },
+    })
+  }
+
+  const handleDifferentColumn = (
+    columnSource,
+    columnDestination,
+    source,
+    destination,
+    draggableId
+  ) => {
     const sourceTaskIds = Array.from(columnSource.taskIds)
     sourceTaskIds.splice(source.index, 1)
 
@@ -66,7 +84,7 @@ const App = () => {
     const destinationTaskIds = Array.from(columnDestination.taskIds)
     destinationTaskIds.splice(destination.index, 0, draggableId)
 
-    const newState = {
+    setInitialData({
       ...initialData,
       columns: {
         ...initialData.columns,
@@ -79,9 +97,7 @@ const App = () => {
           taskIds: destinationTaskIds,
         },
       },
-    }
-
-    setInitialData(newState)
+    })
   }
 
   const getRandomInt = (min, max) => {
